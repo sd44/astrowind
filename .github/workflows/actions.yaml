@@ -14,7 +14,7 @@ jobs:
     steps:
  steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # <--- ADD THIS LINE!
+        uses: actions/checkout@v4
       - name: List files in current directory
         run: ls -R .
       - uses: oven-sh/setup-bun@v2
@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # <--- ADD THIS LINE!
+        uses: actions/checkout@v4
       - name: List files in current directory
         run: ls -R .
       - uses: oven-sh/setup-bun@v2
