@@ -103,12 +103,22 @@ export const getAsset = (path: string): string =>
 /** */
 const definitivePermalink = (permalink: string): string => createPath(BASE_PATHNAME, permalink);
 
+type PermalinkType = 'home' | 'blog' | 'asset' | 'category' | 'tag' | 'post' | 'page';
+type menuItem = {
+  href?: string | { url: string; type?: PermalinkType };
+  type?: PermalinkType;
+  [key: string]: unknown;
+};
+
 /** */
-export const applyGetPermalinks = (menu: object = {}) => {
+export const applyGetPermalinks = (menu: menuItem | menuItem[] = {}): menuItem | menuItem[] => {
   if (Array.isArray(menu)) {
-    return menu.map((item) => applyGetPermalinks(item));
+    return menu.flatMap((item) => {
+      const result = applyGetPermalinks(item);
+      return Array.isArray(result) ? result : [result];
+    });
   } else if (typeof menu === 'object' && menu !== null) {
-    const obj = {};
+    const obj: menuItem = {};
     for (const key in menu) {
       if (key === 'href') {
         if (typeof menu[key] === 'string') {
@@ -125,7 +135,7 @@ export const applyGetPermalinks = (menu: object = {}) => {
           }
         }
       } else {
-        obj[key] = applyGetPermalinks(menu[key]);
+        obj[key] = applyGetPermalinks(menu[key] as menuItem | menuItem[] | undefined);
       }
     }
     return obj;
