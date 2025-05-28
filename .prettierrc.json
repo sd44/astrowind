@@ -1,0 +1,12 @@
+{
+  "plugins": ["prettier-plugin-astro"],
+  "tailwindConfig": "./tailwind.config.js",
+  "$schema": "https://json.schemastore.org/prettierrc",
+  "semi": true,
+  "singleQuote": true,
+  "printWidth": 100,
+  "bracketSameLine": true,
+  "htmlWhitespaceSensitivity": "ignore",
+  "tabWidth": 2,
+  "useTabs": false
+}
