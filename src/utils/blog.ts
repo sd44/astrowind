@@ -198,7 +198,7 @@ export const getStaticPathsBlogCategory = async ({ paginate }: { paginate: Pagin
   if (!isBlogEnabled || !isBlogCategoryRouteEnabled) return [];
 
   const posts = await fetchPosts();
-  const categories = {};
+  const categories: Record<string, (typeof posts)[0]['category']> = {};
   posts.map((post) => {
     if (post.category?.slug) {
       categories[post.category?.slug] = post.category;
@@ -222,25 +222,33 @@ export const getStaticPathsBlogTag = async ({ paginate }: { paginate: PaginateFu
   if (!isBlogEnabled || !isBlogTagRouteEnabled) return [];
 
   const posts = await fetchPosts();
-  const tags = {};
-  posts.map((post) => {
+  const tags: Record<string, NonNullable<NonNullable<(typeof posts)[0]['tags']>[0]>> = {};
+  posts.forEach((post) => {
     if (Array.isArray(post.tags)) {
-      post.tags.map((tag) => {
-        tags[tag?.slug] = tag;
+      post.tags.forEach((tag) => {
+        if (tag?.slug) {
+          tags[tag.slug] = tag;
+        }
       });
     }
   });
 
-  return Array.from(Object.keys(tags)).flatMap((tagSlug) =>
-    paginate(
-      posts.filter((post) => Array.isArray(post.tags) && post.tags.find((elem) => elem.slug === tagSlug)),
-      {
-        params: { tag: tagSlug, blog: TAG_BASE || undefined },
-        pageSize: blogPostsPerPage,
-        props: { tag: tags[tagSlug] },
-      }
-    )
-  );
+  const getTagPaths = (tagSlug: string) => {
+    const tag = tags[tagSlug];
+    if (!tag) return [];
+
+    const filteredPosts = posts.filter(
+      (post) => Array.isArray(post.tags) && post.tags.some((t) => t?.slug === tagSlug)
+    );
+
+    return paginate(filteredPosts, {
+      params: { tag: tagSlug, blog: TAG_BASE || undefined },
+      pageSize: blogPostsPerPage,
+      props: { tag },
+    });
+  };
+
+  return Array.from(Object.keys(tags)).flatMap(getTagPaths);
 };
 
 /** */
@@ -273,7 +281,10 @@ export async function getRelatedPosts(originalPost: Post, maxResults: number = 4
   const selectedPosts: Post[] = [];
   let i = 0;
   while (selectedPosts.length < maxResults && i < postsWithScores.length) {
-    selectedPosts.push(postsWithScores[i].post);
+    const scoreItem = postsWithScores[i];
+    if (scoreItem && scoreItem.post) {
+      selectedPosts.push(scoreItem.post);
+    }
     i++;
   }
 

@@ -83,7 +83,7 @@ export const adaptOpenGraphImages = async (
         ) {
           _image = (await unpicOptimizer(resolvedImage, [defaultWidth], defaultWidth, defaultHeight, 'jpg'))[0];
         } else if (resolvedImage) {
-          const dimensions =
+          const dimensions: [number, number] =
             typeof resolvedImage !== 'string' && resolvedImage?.width <= defaultWidth
               ? [resolvedImage?.width, resolvedImage?.height]
               : [defaultWidth, defaultHeight];

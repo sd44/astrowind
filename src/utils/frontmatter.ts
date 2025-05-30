@@ -20,6 +20,7 @@ export const responsiveTablesRehypePlugin: RehypePlugin = () => {
 
     for (let i = 0; i < tree.children.length; i++) {
       const child = tree.children[i];
+      if (!child || !child.type) continue;
 
       if (child.type === 'element' && child.tagName === 'table') {
         tree.children[i] = {

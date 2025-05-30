@@ -42,6 +42,7 @@ export default ({ config: _themeConfig = 'src/config.yaml' } = {}): AstroIntegra
                   if (id === virtualModuleId) {
                     return resolvedVirtualModuleId;
                   }
+                  return undefined;
                 },
                 load(id) {
                   if (id === resolvedVirtualModuleId) {
@@ -54,6 +55,7 @@ export default ({ config: _themeConfig = 'src/config.yaml' } = {}): AstroIntegra
                     export const ANALYTICS = ${JSON.stringify(ANALYTICS)};
                     `;
                   }
+                  return undefined;
                 },
               },
             ],
