@@ -1,40 +1,40 @@
 site:
-  name: AstroWind
-  site: 'https://astrowind.vercel.app'
+  name: 墨韩的梦园
+  site: 'https://lixin6.com/wind'
   base: '/'
   trailingSlash: false
 
-  googleSiteVerificationId: orcPxI47GSa-cRvY11tUe6iGg2IO_RPvnA1q95iEM3M
+  googleSiteVerificationId: rN8xYsXZ_pHoB0hymSEQwJzsFEKIm3sVTQEBkRYAbuo
 
 # Default SEO metadata
 metadata:
   title:
-    default: AstroWind
-    template: '%s — AstroWind'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    default: 墨韩的梦园
+    template: '%s — 墨韩的梦园'
+  description: "\U0001F680 墨韩的梦园，是墨韩的个人网站，用于作品展示、心得体会等."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: AstroWind
+    site_name: '墨韩的梦园'
     images:
       - url: '~/assets/images/default.png'
         width: 1200
         height: 628
     type: website
-  twitter:
-    handle: '@onwidget'
-    site: '@onwidget'
-    cardType: summary_large_image
+  # twitter:
+  #   handle: '@onwidget'
+  #   site: '@onwidget'
+  #   cardType: summary_large_image
 
 i18n:
-  language: en
+  language: zh-CN # Language code, e.g., "en-US", "zh-CN", "fr-FR"
   textDirection: ltr
 
 apps:
   blog:
     isEnabled: true
-    postsPerPage: 6
+    postsPerPage: 16
 
     post:
       isEnabled: true
