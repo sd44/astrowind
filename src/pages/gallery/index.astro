@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+import GalleryLayout from '~/layouts/GalleryLayout.astro';
+
+const albums = await getCollection('albums');
+---
+
+<GalleryLayout title='Gallery'>
+  <div class='text-center'>
+    <h1 class='font-bold text-5xl'>Photo Gallery</h1>
+    <p class='my-4 text-xl'>A collection of my photos</p>
+  </div>
+  <div class='gap-8 grid grid-cols-2 mx-auto max-w-screen-sm container'>
+    {
+      albums.map((item) => (
+        <a href={`/gallery/${item.id}`} class='group block mb-4 transition-all'>
+          <Image
+            src={item.data.cover}
+            alt={item.data.title}
+            format='avif'
+            width={720}
+            quality='mid'
+            class:list={['rounded-lg transition-all', 'group-hover:opacity-90 group-hover:shadow-lg']}
+          />
+          <div class='mt-4 text-neutral-800 text-center'>
+            <strong class='font-normal'>{item.data.title}</strong>
+            <p class='text-xs'>{item.data.description}</p>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</GalleryLayout>

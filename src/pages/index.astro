@@ -15,6 +15,7 @@ const appStoreDownloadLink = 'https://github.com/onwidget/astrowind';
 const googlePlayImg = '~/assets/images/google-play.png';
 const googlePlayDownloadLink = 'https://github.com/onwidget/astrowind';
 
+import GalleryLayout from '~/layouts/GalleryLayout.astro';
 const metadata = {
   title: 'Mobile App Homepage',
 };
@@ -82,7 +83,14 @@ const metadata = {
   <!-- HighlightedPosts Widget ******* -->
 
   <BlogLatestPosts title='最新日志' information={`特别期望小伙伴们能够多多留言呢！`} />
-
+<GalleryLayout title="Astro">
+  <div class="text-center">
+    <h1 class="font-bold text-5xl">Hello from Astro</h1>
+    <p class="my-4 text-xl">
+      Visit <a href="/gallery" class="underline">Gallery page</a> to see some images.
+    </p>
+  </div>
+</GalleryLayout>
 <!-- 引入评论组件 -->
 <Comment />
 </Layout>
