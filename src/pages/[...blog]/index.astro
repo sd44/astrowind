@@ -43,6 +43,7 @@ const metadata = merge(
   },
   { ...(post?.metadata ? { ...post.metadata, canonical: post.metadata?.canonical || url } : {}) }
 ) as MetaData;
+import Comment from '~/components/Twikoo.astro';
 ---
 
 <Layout metadata={metadata}>
@@ -50,5 +51,8 @@ const metadata = merge(
     {post.Content ? <post.Content /> : <Fragment set:html={post.content || ''} />}
   </SinglePost>
   <ToBlogLink />
+  <!-- 引入评论组件 -->
+  <Comment />
   <RelatedPosts post={post} />
+
 </Layout>

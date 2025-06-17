@@ -1,6 +1,6 @@
 site:
-  name: 墨韩的梦园
-  site: 'https://lixin6.com/wind'
+  name: 子韩的网络日志
+  site: 'https://zihan.lixin6.com/'
   base: '/'
   trailingSlash: false
 
@@ -9,14 +9,14 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: 墨韩的梦园
-    template: '%s — 墨韩的梦园'
-  description: "\U0001F680 墨韩的梦园，是墨韩的个人网站，用于作品展示、心得体会等."
+    default: 子韩的网络日志
+    template: '%s — 子韩的网络日志'
+  description: "\U0001F680 子韩的网络日志，是墨韩的个人网站，用于作品展示、心得体会等."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: '墨韩的梦园'
+    site_name: '子韩的网络日志'
     images:
       - url: '~/assets/images/default.png'
         width: 1200

@@ -1,0 +1,28 @@
+<div class="mx-auto max-w-3xl twikoo-container">
+  <div id='tcomment' ></div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    function loadTwikoo() {
+      const commentsContainer = document.getElementById('tcomment');
+      if (commentsContainer) {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/twikoo@1.6.44/dist/twikoo.min.js';
+        script.async = true;
+        script.onload = () => {
+          const initScript = document.createElement('script');
+          initScript.innerHTML = `
+            twikoo.init({
+                envId: 'http://localhost:8080',
+                el: '#tcomment',
+            });
+        `;
+          document.body.appendChild(initScript);
+        };
+        document.body.appendChild(script);
+      }
+    }
+    loadTwikoo();
+  });
+</script>
