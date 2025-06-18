@@ -25,9 +25,9 @@ const {
     </slot>
   </div>
   <div class='relative mx-auto px-4 sm:px-6 max-w-7xl'>
-    <div class='pt-0 md:pt-[76px] pointer-events-none'></div>
-    <div class='lg:flex lg:items-center lg:gap-8 py-12 md:py-20 lg:py-0 lg:h-screen'>
-      <div class='mx-auto pb-10 md:pb-16 lg:text-left text-center basis-1/3'>
+    <div class='pt-0 md:pt-[36px] pointer-events-none'></div>
+    <div class='lg:flex lg:items-center lg:gap-12 py-8 md:py-14 lg:py-0 lg:h-screen'>
+      <div class='mx-auto pb-10 md:pb-16 lg:text-left text-center basis-2/5'>
         {
           tagline && (
             <p
@@ -39,7 +39,7 @@ const {
         {
           title && (
             <h1
-              class='motion-safe:md:opacity-0 mt-4 mb-4 font-heading font-bold dark:text-gray-200 text-5xl md:text-6xl leading-tighter tracking-tighter motion-safe:md:intersect:animate-fade intersect-once intersect-quarter'
+              class='motion-safe:md:opacity-0 mt-4 mb-4 font-heading font-bold dark:text-gray-200 text-4xl md:text-5xl leading-tighter tracking-tighter motion-safe:md:intersect:animate-fade intersect-once intersect-quarter'
               set:html={title}
             />
           )
@@ -72,7 +72,7 @@ const {
         </div>
         {content && <Fragment set:html={content} />}
       </div>
-      <div class='basis-2/3'>
+      <div class='basis-3/5'>
         {
           image && (
             <div class='relative motion-safe:md:opacity-0 m-auto max-w-5xl aspect-video motion-safe:md:intersect:animate-fade intersect-once intersect-no-queue intersect-quarter'>

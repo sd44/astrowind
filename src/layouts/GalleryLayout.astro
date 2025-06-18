@@ -1,22 +1,17 @@
 ---
-interface Props {
-  title?: string;
+import PageLayout from '~/layouts/PageLayout.astro';
+import type { MetaData } from '~/types';
+export interface Props {
+  metadata?: MetaData;
 }
 
-const { title = "图片墙" } = Astro.props;
+const { metadata } = Astro.props;
 ---
 
-<html lang="en" class="scroll-smooth">
-  <head>
-    <meta charset="utf-8" />
-    <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-  </head>
-  <body class="bg-slate-50 text-slate-800 antialiased">
-    <main class="mx-auto px-4 py-16">
+<PageLayout metadata={metadata}>
+  <div class='bg-slate-50 text-slate-800 antialiased'>
+    <main class='container mx-auto px-4 py-16'>
       <slot />
     </main>
-  </body>
-</html>
+  </div>
+</PageLayout>

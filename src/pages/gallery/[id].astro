@@ -23,18 +23,13 @@ export async function getStaticPaths() {
 }
 
 const { album } = Astro.props;
+const metadata = {
+  title: '图片墙',
+};
 const images = await getAlbumImages(album.id);
 ---
 
-<style>
-  [data-album-image] {
-    display: inline-block;
-    height: auto;
-    margin-bottom: 1rem;
-  }
-</style>
-
-<GalleryLayout title={album.data.title}>
+<GalleryLayout metadata={metadata}>
   <div class='text-center'>
     <h1 class='font-bold text-5xl'>
       {album.data.title}
@@ -43,24 +38,28 @@ const images = await getAlbumImages(album.id);
       {album.data.description}
     </p>
 
-    <div class='sm:columns-2 md:columns-3 lg:columns-4 xl:columns-5 mx-auto my-8 text-center'>
+    <div class='gap-4 grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mx-auto my-8 text-center sm:columnsgrid-cols-2'>
       {
         images.map((image) => (
-          <Image
-            src={image}
-            alt={`Image from ${album.data.title} album`}
-            format='avif'
-            quality={50}
-            class='inline-block hover:shadow-lg mb-4 border hover:border-gray-300 border-transparent rounded transition-all duration-300 ease-in-out'
-            loading='lazy'
-            data-album-image
-          />
+
+          <a href={image.src} target='_blank' rel='noopener noreferrer' class='block'>
+            <Image
+              src={image}
+              alt={`from ${album.data.title} album`}
+              format='avif'
+              quality={50}
+              class='hover:shadow-lg mb-4 border-8 border-gray-300 hover:border-2 rounded w-full transition-all duration-300 ease-in-out'
+              decoding='async'
+              loading='lazy'
+              data-album-image
+            />
+            </a>
         ))
       }
     </div>
 
     <p class='my-4 text-lg text-center'>
-      <a href='/gallery/' class='hover:underline'>View other albums</a>
+      <a href='/gallery' class='hover:underline'>View other albums</a>
     </p>
   </div>
 </GalleryLayout>

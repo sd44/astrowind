@@ -6,16 +6,14 @@ import Header from '~/components/widgets/Header.astro';
 import Hero2 from '~/components/widgets/Hero2.astro';
 
 import Image from '~/components/common/Image.astro';
+import Comment from '~/components/Twikoo.astro';
 import Button from '~/components/ui/Button.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 
 const appStoreImg = '~/assets/images/app-store.png';
 const appStoreDownloadLink = 'https://github.com/onwidget/astrowind';
- import Comment from '~/components/Twikoo.astro';
-const googlePlayImg = '~/assets/images/google-play.png';
-const googlePlayDownloadLink = 'https://github.com/onwidget/astrowind';
 
-import GalleryLayout from '~/layouts/GalleryLayout.astro';
+import GalleryList from '~/components/GalleryList.astro';
 const metadata = {
   title: 'Mobile App Homepage',
 };
@@ -59,7 +57,7 @@ const metadata = {
       <span class='hidden xl:block pt-0 text-purple-400 text-3xl tracking-wide'>朋友们，快快留言吧</span>
     </Fragment>
 
-    <Fragment slot='subtitle' class='text-2xl tracking-widest'>
+    <Fragment slot='subtitle' class='text-2xl tracking-wider'>
       <div class='text-gray-700 text-2xl text-pretty tracking-wider'>
         小小梦想在心中 &ensp; 像颗种子悄悄种 <br />
         阳光雨露来呵护 &ensp; 风雨雷电亦不怵<br />
@@ -83,14 +81,8 @@ const metadata = {
   <!-- HighlightedPosts Widget ******* -->
 
   <BlogLatestPosts title='最新日志' information={`特别期望小伙伴们能够多多留言呢！`} />
-<GalleryLayout title="Astro">
-  <div class="text-center">
-    <h1 class="font-bold text-5xl">Hello from Astro</h1>
-    <p class="my-4 text-xl">
-      Visit <a href="/gallery" class="underline">Gallery page</a> to see some images.
-    </p>
-  </div>
-</GalleryLayout>
-<!-- 引入评论组件 -->
-<Comment />
+
+  <GalleryList title='图片墙' information={'我的美术作品和相片簿'} />
+  <!-- 引入评论组件 -->
+  <Comment />
 </Layout>

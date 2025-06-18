@@ -70,6 +70,10 @@ export default defineConfig({
 
   image: {
     domains: ['cdn.pixabay.com'],
+    experimentalDefaultStyles: false,
+  },
+  experimental: {
+    responsiveImages: true,
   },
 
   markdown: {

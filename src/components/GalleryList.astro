@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Button from './ui/Button.astro';
+import WidgetWrapper from './ui/WidgetWrapper.astro';
+import type { Widget } from '~/types';
+
+export interface Props extends Widget {
+  title?: string;
+  linkText?: string;
+  linkUrl?: string | URL;
+  information?: string;
+  count?: number;
+}
+
+const {
+  title = await Astro.slots.render('title'),
+  linkText = '查看全部图片',
+  linkUrl = '/gallery',
+
+  id,
+  isDark = false,
+  classes = {},
+  bg = await Astro.slots.render('bg'),
+} = Astro.props;
+
+const albums = await getCollection('albums');
+---
+
+<WidgetWrapper id={id} isDark={isDark} containerClass={classes?.container as string} bg={bg}>
+  <div class='flex lg:flex-row flex-col lg:justify-between mb-8'>
+    {
+      title && (
+        <div class='md:max-w-sm'>
+          <h2
+            class='group mb-2 font-heading font-bold text-3xl sm:text-4xl sm:leading-none tracking-tight'
+            set:html={title}
+          />
+          {linkText && linkUrl && (
+            <Button variant='link' href={linkUrl}>
+              {' '}
+              {linkText} »
+            </Button>
+          )}
+        </div>
+      )
+    }
+  </div>
+  <div class='gap-6 row-gap-5 grid md:grid-cols-2 lg:grid-cols-4 -mb-6'>
+    {
+      albums.map((item) => (
+        <a href={`/gallery/${item.id}`} class='group block mb-4 transition-all'>
+          <Image
+            src={item.data.cover}
+            alt={item.data.title}
+            format='avif'
+            width={720}
+            quality='mid'
+            class:list={['rounded-lg transition-all', 'group-hover:opacity-90 group-hover:shadow-lg']}
+          />
+          <div class='mt-4 text-neutral-800 text-center'>
+            <strong class='font-normal'>{item.data.title}</strong>
+            <p class='text-xs'>{item.data.description}</p>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</WidgetWrapper>
