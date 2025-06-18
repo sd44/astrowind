@@ -1,10 +1,10 @@
 ---
-import type { InferGetStaticPropsType, GetStaticPaths } from 'astro';
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
 
-import Layout from '~/layouts/PageLayout.astro';
-import BlogList from '~/components/blog/List.astro';
 import Headline from '~/components/blog/Headline.astro';
+import BlogList from '~/components/blog/List.astro';
 import Pagination from '~/components/blog/Pagination.astro';
+import Layout from '~/layouts/PageLayout.astro';
 // import PostTags from "~/components/blog/Tags.astro";
 
 import { blogListRobots, getStaticPathsBlogList } from '~/utils/blog';
@@ -38,7 +38,7 @@ const metadata = {
 <Layout metadata={metadata}>
   <section class="mx-auto px-6 sm:px-6 py-8 sm:py-12 lg:py-16 max-w-4xl">
     <Headline
-      subtitle="子韩生活、工作、学习、思考的点点滴滴"
+      subtitle="子韩生活、学习、思考的点点滴滴"
     >
       全部日志
     </Headline>
