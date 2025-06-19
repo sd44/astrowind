@@ -28,16 +28,16 @@ const albums = await getCollection('albums');
 ---
 
 <WidgetWrapper id={id} isDark={isDark} containerClass={classes?.container as string} bg={bg}>
-  <div class='flex lg:flex-row flex-col lg:justify-between mb-8'>
+  <div class="mb-8 flex flex-col lg:flex-row lg:justify-between">
     {
       title && (
-        <div class='md:max-w-sm'>
+        <div class="md:max-w-sm">
           <h2
-            class='group mb-2 font-heading font-bold text-3xl sm:text-4xl sm:leading-none tracking-tight'
+            class="group font-heading mb-2 text-3xl font-bold tracking-tight sm:text-4xl sm:leading-none"
             set:html={title}
           />
           {linkText && linkUrl && (
-            <Button variant='link' href={linkUrl}>
+            <Button variant="link" href={linkUrl}>
               {' '}
               {linkText} »
             </Button>
@@ -46,21 +46,21 @@ const albums = await getCollection('albums');
       )
     }
   </div>
-  <div class='gap-6 row-gap-5 grid md:grid-cols-2 lg:grid-cols-4 -mb-6'>
+  <div class="row-gap-5 -mb-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
     {
       albums.map((item) => (
-        <a href={`/gallery/${item.id}`} class='group block mb-4 transition-all'>
+        <a href={`/gallery/${item.id}`} class="group mb-4 block transition-all">
           <Image
             src={item.data.cover}
             alt={item.data.title}
-            format='avif'
+            format="avif"
             width={720}
-            quality='mid'
+            quality="mid"
             class:list={['rounded-lg transition-all', 'group-hover:opacity-90 group-hover:shadow-lg']}
           />
-          <div class='mt-4 text-neutral-800 text-center'>
-            <strong class='font-normal'>{item.data.title}</strong>
-            <p class='text-xs'>{item.data.description}</p>
+          <div class="mt-4 text-center text-neutral-800">
+            <strong class="font-normal">{item.data.title}</strong>
+            <p class="text-xs">{item.data.description}</p>
           </div>
         </a>
       ))

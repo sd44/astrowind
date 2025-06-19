@@ -1,7 +1,7 @@
 ---
-import { Icon } from 'astro-icon/components';
-import { SITE } from 'astrowind:config';
-import { getHomePermalink } from '~/utils/permalinks';
+// import { Icon } from 'astro-icon/components';
+// import { SITE } from 'astrowind:config';
+// import { getHomePermalink } from '~/utils/permalinks';
 
 interface Link {
   text?: string;
@@ -23,13 +23,13 @@ export interface Props {
   theme?: string;
 }
 
-const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme = 'light' } = Astro.props;
+const { socialLinks = [], footNote = '', theme = 'light' } = Astro.props;
 ---
 
 <footer class:list={[{ dark: theme === 'dark' }, 'not-prose relative border-t border-gray-200 dark:border-slate-800']}>
-  <div class="absolute inset-0 dark:bg-dark pointer-events-none" aria-hidden="true"></div>
+  <div class='absolute inset-0 dark:bg-dark pointer-events-none' aria-hidden='true'></div>
   <div
-    class="relative motion-safe:md:opacity-0 mx-auto px-4 sm:px-6 max-w-7xl dark:text-slate-300 motion-safe:md:intersect:animate-fade intersect-once intersect-quarter intersect-no-queue"
+    class='relative motion-safe:md:opacity-0 mx-auto px-4 sm:px-6 max-w-7xl dark:text-slate-300 motion-safe:md:intersect:animate-fade intersect-once intersect-quarter intersect-no-queue'
   >
     <!-- <div class="gap-4 gap-y-8 sm:gap-8 grid grid-cols-12 py-8 md:py-12">
       <div class="col-span-12 lg:col-span-4">
@@ -74,14 +74,15 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         ))
       }
     </div> -->
-    <div class="md:flex md:justify-between md:items-center py-6 md:py-8">
+    <div class='md:flex md:justify-between md:items-center py-6 md:py-8'>
       {
         socialLinks?.length ? (
-          <ul class="flex md:order-1 rtl:-mr-2 md:rtl:mr-4 mb-4 md:mb-0 -ml-2 rtl:ml-0 md:ml-4 md:rtl:ml-0">
-            {socialLinks.map(({ ariaLabel, href, text, icon }) => (
+          <ul class='flex md:order-1 rtl:-mr-2 md:rtl:mr-4 mb-4 md:mb-0 -ml-2 rtl:ml-0 md:ml-4 md:rtl:ml-0'>
+            {/* {socialLinks.map(({ ariaLabel, href, text, icon }) => ( */}
+            {socialLinks.map(({ ariaLabel, href, text }) => (
               <li>
                 <a
-                  class="inline-flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 p-2.5 rounded-lg focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 text-muted dark:text-gray-400 text-sm"
+                  class='inline-flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 p-2.5 rounded-lg focus:outline-hidden focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 text-muted dark:text-gray-400 text-sm'
                   aria-label={ariaLabel}
                   href={href}
                 >
@@ -96,7 +97,7 @@ const { socialLinks = [], secondaryLinks = [], links = [], footNote = '', theme 
         )
       }
 
-      <div class="mr-4 dark:text-muted text-sm">
+      <div class='mr-4 dark:text-muted text-sm'>
         <Fragment set:html={footNote} />
       </div>
     </div>

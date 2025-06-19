@@ -30,36 +30,35 @@ const images = await getAlbumImages(album.id);
 ---
 
 <GalleryLayout metadata={metadata}>
-  <div class='text-center'>
-    <h1 class='font-bold text-5xl'>
+  <div class="text-center">
+    <h1 class="text-5xl font-bold">
       {album.data.title}
     </h1>
-    <p class='my-4 text-xl'>
+    <p class="my-4 text-xl">
       {album.data.description}
     </p>
 
-    <div class='gap-4 grid md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 mx-auto my-8 text-center sm:columnsgrid-cols-2'>
+    <div class="sm:columnsgrid-cols-2 mx-auto my-8 grid gap-4 text-center md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
       {
         images.map((image) => (
-
-          <a href={image.src} target='_blank' rel='noopener noreferrer' class='block'>
+          <a href={image.src} target="_blank" rel="noopener noreferrer" class="block">
             <Image
               src={image}
               alt={`from ${album.data.title} album`}
-              format='avif'
+              format="avif"
               quality={50}
-              class='hover:shadow-lg mb-4 border-8 border-gray-300 hover:border-2 rounded w-full transition-all duration-300 ease-in-out'
-              decoding='async'
-              loading='lazy'
+              class="mb-4 w-full rounded border-8 border-gray-300 transition-all duration-300 ease-in-out hover:border-2 hover:shadow-lg"
+              decoding="async"
+              loading="lazy"
               data-album-image
             />
-            </a>
+          </a>
         ))
       }
     </div>
 
-    <p class='my-4 text-lg text-center'>
-      <a href='/gallery' class='hover:underline'>View other albums</a>
+    <p class="my-4 text-center text-lg">
+      <a href="/gallery" class="hover:underline">View other albums</a>
     </p>
   </div>
 </GalleryLayout>

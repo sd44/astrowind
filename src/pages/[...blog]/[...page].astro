@@ -36,12 +36,8 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
-  <section class="mx-auto px-6 sm:px-6 py-8 sm:py-12 lg:py-16 max-w-4xl">
-    <Headline
-      subtitle="子韩生活、学习、思考的点点滴滴"
-    >
-      全部日志
-    </Headline>
+  <section class="mx-auto max-w-4xl px-6 py-8 sm:px-6 sm:py-12 lg:py-16">
+    <Headline subtitle="子韩生活、学习、思考的点点滴滴"> 全部日志 </Headline>
     <BlogList posts={page.data} />
     <Pagination prevUrl={page.url.prev} nextUrl={page.url.next} />
     <!--
