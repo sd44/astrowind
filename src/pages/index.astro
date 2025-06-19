@@ -3,13 +3,10 @@ import Layout from '~/layouts/PageLayout.astro';
 
 import Hero2 from '~/components/widgets/Hero2.astro';
 
-import Image from '~/components/common/Image.astro';
 import Comment from '~/components/Twikoo.astro';
-import Button from '~/components/ui/Button.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
+import TagsList from '~/components/widgets/TagsList.astro';
 
-const appStoreImg = '~/assets/images/app-store.png';
-const appStoreDownloadLink = 'https://github.com/onwidget/astrowind';
 
 import GalleryList from '~/components/GalleryList.astro';
 const metadata = {
@@ -28,16 +25,15 @@ const metadata = {
       alt: '本站 Hero 图片',
     }}
   >
-    <div>sadfasdf</div>
     <Fragment slot="title">
       <span class="text-accent dark:text-white">子韩的网络日志</span>
       <br />
-      <span class="p-0 text-3xl tracking-wide text-orange-500"> 我的日常、学习和生活片段 </span>
-      <span class="hidden pt-0 text-3xl tracking-wide text-purple-400 xl:block">朋友们，快快留言吧</span>
+      <!-- <span class="p-0 text-orange-500 text-3xl tracking-wide"> 我的日常、学习和生活片段 </span> -->
+      <span class="hidden xl:block pt-6 text-3xl tracking-wide">朋友们，快快留言吧</span>
     </Fragment>
 
-    <Fragment slot="subtitle" class="text-2xl tracking-wider">
-      <div class="text-2xl tracking-wider text-pretty text-gray-700">
+    <Fragment slot="subtitle" class="space-y-16 text-2xl tracking-wider">
+      <div class="text-gracking-wider text-2xl text-pretty tracking-wider">
         小小梦想在心中 &ensp; 像颗种子悄悄种 <br />
         阳光雨露来呵护 &ensp; 风雨雷电亦不怵<br />
 
@@ -46,16 +42,11 @@ const metadata = {
       </div>
     </Fragment>
 
-    <div slot="actions" class="flex max-w-sm gap-4 pt-8">
-      <Button variant="link" href={appStoreDownloadLink}>
-        <Image src={appStoreImg} alt="App Store Image" width={200} />
-      </Button>
-
-      <!-- <Button variant='link' href={googlePlayDownloadLink}>
-        <Image src={googlePlayImg} alt='Google Play Image' width={200} />
-      </Button> -->
-    </div>
+    <Fragment slot="content" class="mt-24 tracking-wide">
+      <TagsList />
+      </Fragment>
   </Hero2>
+
 
   <!-- HighlightedPosts Widget ******* -->
 

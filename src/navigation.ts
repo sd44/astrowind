@@ -1,5 +1,20 @@
 import { getAsset, getBlogPermalink, getPermalink } from './utils/permalinks';
 
+import type { Post } from '~/types';
+import { fetchPosts } from '~/utils/blog';
+
+const posts = await fetchPosts();
+
+// 获取所有分类
+const categories: Record<string, string> = {};
+posts.forEach((post: Post) => {
+  if (post.category) {
+    categories[post.category.slug] = post.category.title;
+  }
+});
+
+const categoryLinks = Object.entries(categories).map(([slug, title]) => ({ text: title, href: getPermalink(`/category/${slug}`) }))
+
 export const headerData = {
   links: [
     {
@@ -7,12 +22,13 @@ export const headerData = {
       href: getPermalink('/'),
     },
     {
-      text: '分类',
+      text: '日志',
       links: [
         {
-          text: 'Blog List',
+          text: '全部',
           href: getBlogPermalink(),
         },
+        ...categoryLinks,
       ],
     },
     {
