@@ -42,7 +42,7 @@ export const headerData = {
     },
     {
       text: '图片墙',
-      href: getPermalink('/gallery'),
+      href: getPermalink('/albums'),
     },
   ],
   actions: [{ text: 'Download', href: 'https://github.com/onwidget/astrowind', target: '_blank' }],
