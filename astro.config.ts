@@ -80,7 +80,6 @@ export default defineConfig({
   },
 
   vite: {
-// @ts-expect-error - Ignore type errors for the plugin tailwindcss()
     plugins: [tailwindcss()],
     resolve: {
       alias: {
