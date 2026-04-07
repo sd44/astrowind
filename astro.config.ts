@@ -71,7 +71,7 @@ export default defineConfig({
   image: {
     domains: ['cdn.pixabay.com', 'plus.unsplash.com', 'images.unsplash.com'],
     responsiveStyles: true,
-    layout: "constrained",
+    layout: 'constrained',
   },
 
   markdown: {
