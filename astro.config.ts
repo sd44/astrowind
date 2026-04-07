@@ -80,6 +80,7 @@ export default defineConfig({
   },
 
   vite: {
+    // @ts-expect-error - Vite plugin type mismatch between @tailwindcss/vite and astro's vite
     plugins: [tailwindcss()],
     resolve: {
       alias: {
