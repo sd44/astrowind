@@ -21,12 +21,22 @@ if (props.alt === undefined || props.alt === null) {
   throw new Error();
 }
 
+// 处理 width：忽略 "auto" 值
 if (typeof props.width === 'string') {
-  props.width = parseInt(props.width);
+  if (props.width.toLowerCase() === 'auto') {
+    props.width = null;
+  } else {
+    props.width = parseInt(props.width);
+  }
 }
 
 if (typeof props.height === 'string') {
   props.height = parseInt(props.height);
+}
+
+// fullWidth 布局时，如果没有 width，设置默认值用于断点生成
+if (props.layout === 'fullWidth' && !props.width) {
+  props.width = 1200;
 }
 
 if (!props.loading) {
