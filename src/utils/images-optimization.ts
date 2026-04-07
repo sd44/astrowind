@@ -230,7 +230,7 @@ export const astroAssetsOptimizer: ImagesOptimizer = async (
       const result = await getImage({
         src: image,
         width: w,
-        ...(isRemote ? {} : { inferSize: true }),
+        ...(isRemote && _height ? { height: _height } : { inferSize: true }),
         ...(format ? { format: format } : {}),
       });
 
