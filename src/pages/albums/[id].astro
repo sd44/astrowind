@@ -55,14 +55,10 @@ async function resolveImageToMetadata(
   const relativePath = imagePath.replace(/^\.\//, '');
 
   // 使用动态 import 匹配
-  const allImages = import.meta.glob<{ default: ImageMetadata }>(
-    '/src/content/albums/**/*.{jpeg,jpg,png,gif,webp}'
-  );
+  const allImages = import.meta.glob<{ default: ImageMetadata }>('/src/content/albums/**/*.{jpeg,jpg,png,gif,webp}');
 
   // 匹配路径中包含 album 目录和图片名的条目
-  const matched = Object.entries(allImages).find(([key]) =>
-    key.toLowerCase().includes(relativePath.toLowerCase())
-  );
+  const matched = Object.entries(allImages).find(([key]) => key.toLowerCase().includes(relativePath.toLowerCase()));
 
   if (matched) {
     const mod = await matched[1]();
@@ -89,7 +85,9 @@ function buildSubHtml(img: ImageMeta): string | undefined {
   const metaParts: string[] = [];
   if (img.date) {
     const d = new Date(img.date);
-    metaParts.push(`📅 ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+    metaParts.push(
+      `📅 ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+    );
   }
   if (img.location) {
     metaParts.push(`📍 ${img.location}`);
@@ -113,9 +111,7 @@ if (hasDetailedImages) {
   // 方式 1：使用 YAML 中定义的详细图片数据
   const imageDefs = album.data.images!.filter((img): img is ImageMeta => img !== undefined);
 
-  const resolved = await Promise.all(
-    imageDefs.map((img) => resolveImageToMetadata(album, img.src))
-  );
+  const resolved = await Promise.all(imageDefs.map((img) => resolveImageToMetadata(album, img.src)));
 
   galleryImages = resolved.map(({ meta }, index) => {
     const img = imageDefs[index];
@@ -140,9 +136,9 @@ if (hasDetailedImages) {
 ---
 
 <GalleryLayout metadata={{ title: album.data.title }}>
-  <div class='mx-auto max-w-6xl px-4 py-8'>
-    <h1 class='mb-4 text-center text-4xl font-bold'>{album.data.title}</h1>
-    {album.data.description && <p class='mb-8 text-center text-lg text-gray-600'>{album.data.description}</p>}
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <h1 class="mb-4 text-center text-4xl font-bold">{album.data.title}</h1>
+    {album.data.description && <p class="mb-8 text-center text-lg text-gray-600">{album.data.description}</p>}
 
     <LightGallery
       layout={{
@@ -159,12 +155,8 @@ if (hasDetailedImages) {
       }}
     />
 
-    <div class='mt-8 text-center'>
-      <a
-        href='/albums'
-        class='text-blue-600 hover:underline'
-        >← 返回相册列表</a
-      >
+    <div class="mt-8 text-center">
+      <a href="/albums" class="text-blue-600 hover:underline">← 返回相册列表</a>
     </div>
   </div>
 </GalleryLayout>

@@ -13,7 +13,10 @@ posts.forEach((post: Post) => {
   }
 });
 
-const categoryLinks = Object.entries(categories).map(([slug, title]) => ({ text: title, href: getPermalink(`/category/${slug}`) }))
+const categoryLinks = Object.entries(categories).map(([slug, title]) => ({
+  text: title,
+  href: getPermalink(`/category/${slug}`),
+}));
 
 export const headerData = {
   links: [

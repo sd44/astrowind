@@ -7,27 +7,27 @@ const albums = await getCollection('albums');
 ---
 
 <GalleryLayout metadata={{ title: '相册' }}>
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-4xl font-bold text-center mb-8">相册</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {albums.map((album) => (
-        <a href={`/albums/${album.id}`} class="group block transition-all hover:opacity-90">
-          <Image
-            src={album.data.cover}
-            alt={album.data.title}
-            format="avif"
-            width={720}
-            quality="mid"
-            class="rounded-lg shadow-md group-hover:shadow-lg transition-all"
-          />
-          <div class="mt-4 text-center">
-            <h3 class="text-lg font-semibold">{album.data.title}</h3>
-            {album.data.description && (
-              <p class="text-sm text-gray-600 mt-1">{album.data.description}</p>
-            )}
-          </div>
-        </a>
-      ))}
+  <div class="mx-auto max-w-6xl px-4 py-8">
+    <h1 class="mb-8 text-center text-4xl font-bold">相册</h1>
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {
+        albums.map((album) => (
+          <a href={`/albums/${album.id}`} class="group block transition-all hover:opacity-90">
+            <Image
+              src={album.data.cover}
+              alt={album.data.title}
+              format="avif"
+              width={720}
+              quality="mid"
+              class="rounded-lg shadow-md transition-all group-hover:shadow-lg"
+            />
+            <div class="mt-4 text-center">
+              <h3 class="text-lg font-semibold">{album.data.title}</h3>
+              {album.data.description && <p class="mt-1 text-sm text-gray-600">{album.data.description}</p>}
+            </div>
+          </a>
+        ))
+      }
     </div>
   </div>
 </GalleryLayout>

@@ -7,7 +7,6 @@ import Comment from '~/components/Twikoo.astro';
 import BlogLatestPosts from '~/components/widgets/BlogLatestPosts.astro';
 import TagsList from '~/components/widgets/TagsList.astro';
 
-
 import GalleryList from '~/components/GalleryList.astro';
 const metadata = {
   title: 'Mobile App Homepage',
@@ -29,11 +28,11 @@ const metadata = {
       <span class="text-accent dark:text-white">子韩的网络日志</span>
       <br />
       <!-- <span class="p-0 text-orange-500 text-3xl tracking-wide"> 我的日常、学习和生活片段 </span> -->
-      <span class="hidden xl:block pt-6 text-3xl tracking-wide">朋友们，快快留言吧</span>
+      <span class="hidden pt-6 text-3xl tracking-wide xl:block">朋友们，快快留言吧</span>
     </Fragment>
 
     <Fragment slot="subtitle" class="space-y-16 text-2xl tracking-wider">
-      <div class="text-gracking-wider text-2xl text-pretty tracking-wider">
+      <div class="text-gracking-wider text-2xl tracking-wider text-pretty">
         小小梦想在心中 &ensp; 像颗种子悄悄种 <br />
         阳光雨露来呵护 &ensp; 风雨雷电亦不怵<br />
 
@@ -44,9 +43,8 @@ const metadata = {
 
     <Fragment slot="content" class="mt-24 tracking-wide">
       <TagsList />
-      </Fragment>
+    </Fragment>
   </Hero2>
-
 
   <!-- HighlightedPosts Widget ******* -->
 

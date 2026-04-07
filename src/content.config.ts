@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content';
-import { z } from 'astro/zod'
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 const metadataDefinition = () =>
@@ -79,10 +79,10 @@ const albums = defineCollection({
           z.object({
             src: z.string(),
             alt: z.string().optional(),
-            caption: z.string().optional(),       // 图片说明文字
-            date: z.date().optional(),            // 拍摄日期
-            location: z.string().optional(),      // 拍摄地点
-            subHtml: z.string().optional(),       // 自定义 HTML（优先级最高）
+            caption: z.string().optional(), // 图片说明文字
+            date: z.date().optional(), // 拍摄日期
+            location: z.string().optional(), // 拍摄地点
+            subHtml: z.string().optional(), // 自定义 HTML（优先级最高）
             loading: z.enum(['lazy', 'eager']).optional(),
             srcThumb: z.string().optional(),
           })
