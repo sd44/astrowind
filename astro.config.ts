@@ -71,7 +71,6 @@ export default defineConfig({
   image: {
     domains: ['cdn.pixabay.com'],
     responsiveStyles: true, 
-    experimentalDefaultStyles: false,
     layout: "constrained",
   },
 
@@ -81,6 +80,7 @@ export default defineConfig({
   },
 
   vite: {
+// @ts-expect-error - Ignore type errors for the plugin tailwindcss()
     plugins: [tailwindcss()],
     resolve: {
       alias: {

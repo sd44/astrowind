@@ -1,8 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
-import { LightGallery } from 'astro-lightgallery';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { LightGallery, type AstroLightGalleryImgType } from 'astro-lightgallery';
 import GalleryLayout from '~/layouts/GalleryLayout.astro';
 import { getAlbumImages } from '~/utils/albums';
+import type { ImageMetadata } from 'astro';
 
 export async function getStaticPaths() {
   const albums = await getCollection('albums');
@@ -14,20 +15,134 @@ export async function getStaticPaths() {
 }
 
 const { album } = Astro.props;
-const images = await getAlbumImages(album.id);
 
-const galleryImages = images.map((img) => ({
-  src: img.src,
-  alt: img.alt || `${album.data.title} photo`,
-}));
+// ============================================
+// 类型定义
+// ============================================
+interface ImageMeta {
+  src: string;
+  alt?: string;
+  caption?: string;
+  date?: Date;
+  location?: string;
+  subHtml?: string;
+  loading?: 'lazy' | 'eager';
+  srcThumb?: string;
+}
+
+// ============================================
+// 辅助函数
+// ============================================
+
+/**
+ * 将相对于 YAML 文件的路径转换为 Astro 可以处理的 ImageMetadata
+ * 如果无法解析，返回原始路径字符串
+ */
+async function resolveImageToMetadata(
+  _album: CollectionEntry<'albums'>,
+  imagePath: string
+): Promise<{ meta: ImageMetadata | string; extra: Omit<ImageMeta, 'src'> }> {
+  // 提取额外元数据
+  const extra: Omit<ImageMeta, 'src'> = {};
+
+  // 如果是绝对路径或 http 链接，直接返回
+  if (imagePath.startsWith('/') || imagePath.startsWith('http')) {
+    return { meta: imagePath, extra };
+  }
+
+  // 相对路径：尝试从相册目录中匹配
+  // imagePath 例如: ./testalbums/1.jpg → testalbums/1.jpg
+  const relativePath = imagePath.replace(/^\.\//, '');
+
+  // 使用动态 import 匹配
+  const allImages = import.meta.glob<{ default: ImageMetadata }>(
+    '/src/content/albums/**/*.{jpeg,jpg,png,gif,webp}'
+  );
+
+  // 匹配路径中包含 album 目录和图片名的条目
+  const matched = Object.entries(allImages).find(([key]) =>
+    key.toLowerCase().includes(relativePath.toLowerCase())
+  );
+
+  if (matched) {
+    const mod = await matched[1]();
+    return { meta: mod.default, extra };
+  }
+
+  // 未匹配到，返回原始路径
+  return { meta: imagePath, extra };
+}
+
+/**
+ * 生成 lightGallery 的 subHtml 内容
+ */
+function buildSubHtml(img: ImageMeta): string | undefined {
+  // 如果手动设置了 subHtml，优先使用
+  if (img.subHtml) return img.subHtml;
+
+  const parts: string[] = [];
+
+  if (img.caption) {
+    parts.push(`<h4>${img.caption}</h4>`);
+  }
+
+  const metaParts: string[] = [];
+  if (img.date) {
+    const d = new Date(img.date);
+    metaParts.push(`📅 ${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`);
+  }
+  if (img.location) {
+    metaParts.push(`📍 ${img.location}`);
+  }
+
+  if (metaParts.length > 0) {
+    parts.push(`<p>${metaParts.join(' · ')}</p>`);
+  }
+
+  return parts.length > 0 ? parts.join('') : undefined;
+}
+
+// ============================================
+// 构建图片列表
+// ============================================
+const hasDetailedImages = album.data.images && Array.isArray(album.data.images);
+
+let galleryImages: AstroLightGalleryImgType[];
+
+if (hasDetailedImages) {
+  // 方式 1：使用 YAML 中定义的详细图片数据
+  const imageDefs = album.data.images!.filter((img): img is ImageMeta => img !== undefined);
+
+  const resolved = await Promise.all(
+    imageDefs.map((img) => resolveImageToMetadata(album, img.src))
+  );
+
+  galleryImages = resolved.map(({ meta }, index) => {
+    const img = imageDefs[index];
+    if (!img) return { src: '', alt: '', loading: 'lazy' as const };
+    return {
+      src: typeof meta === 'string' ? meta : meta.src,
+      alt: img.alt || img.caption || `${album.data.title} 图片 ${index + 1}`,
+      subHtml: buildSubHtml(img),
+      loading: img.loading || 'lazy',
+      srcThumb: img.srcThumb,
+    };
+  });
+} else {
+  // 方式 2：回退 — 自动加载相册目录中的所有图片
+  const images = await getAlbumImages(album.id);
+  galleryImages = images.map((img, index) => ({
+    src: img.src,
+    alt: `${album.data.title} - 图片 ${index + 1}`,
+    loading: 'lazy' as const,
+  }));
+}
 ---
 
 <GalleryLayout metadata={{ title: album.data.title }}>
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <h1 class="text-4xl font-bold text-center mb-4">{album.data.title}</h1>
-    {album.data.description && (
-      <p class="text-lg text-center text-gray-600 mb-8">{album.data.description}</p>
-    )}
+  <div class='mx-auto max-w-6xl px-4 py-8'>
+    <h1 class='mb-4 text-center text-4xl font-bold'>{album.data.title}</h1>
+    {album.data.description && <p class='mb-8 text-center text-lg text-gray-600'>{album.data.description}</p>}
 
     <LightGallery
       layout={{
@@ -39,13 +154,17 @@ const galleryImages = images.map((img) => ({
       options={{
         thumbnail: true,
         zoom: true,
-        fullscreen: true,
+        fullScreen: true,
         download: true,
       }}
     />
 
-    <div class="text-center mt-8">
-      <a href="/albums" class="text-blue-600 hover:underline">← 返回相册列表</a>
+    <div class='mt-8 text-center'>
+      <a
+        href='/albums'
+        class='text-blue-600 hover:underline'
+        >← 返回相册列表</a
+      >
     </div>
   </div>
 </GalleryLayout>

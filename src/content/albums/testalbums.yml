@@ -1,0 +1,31 @@
+# 相册配置示例 - 带详细说明
+title: 康斯坦丁漫画（测试）
+description: 使用 astro-lightGallery 展示图片
+cover: ./testalbums/0cover.jpg
+
+# 可选：为每张图片添加详细说明
+images:
+  - src: ./testalbums/1.jpg
+    alt: 第一张图片
+    caption: "康斯坦丁 - 场景一"
+    date: 2024-06-15
+    location: "工作室"
+    loading: "eager"  # 优先加载（适合首屏图片）
+
+  - src: ./testalbums/2.jpg
+    alt: 第二张图片
+    caption: "康斯坦丁 - 场景二"
+    date: 2024-06-16
+    location: "外景地"
+    loading: "lazy"   # 延迟加载（默认值）
+
+  - src: ./testalbums/3.jpg
+    alt: 第三张图片
+    caption: "康斯坦丁 - 场景三"
+    date: 2024-06-17
+
+  - src: ./testalbums/4.jpg
+    alt: 第四张图片
+    caption: "康斯坦丁 - 场景四"
+    date: 2024-06-18
+    location: "后期制作室"

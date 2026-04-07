@@ -8,7 +8,7 @@ const metadataDefinition = () =>
       title: z.string().optional(),
       ignoreTitleTemplate: z.boolean().optional(),
 
-      canonical: z.string().url().optional(),
+      canonical: z.url().optional(),
 
       robots: z
         .object({
@@ -73,6 +73,21 @@ const albums = defineCollection({
       title: z.string(),
       description: z.string().optional(),
       cover: image(),
+      // 可选：为每张图片添加详细说明
+      images: z
+        .array(
+          z.object({
+            src: z.string(),
+            alt: z.string().optional(),
+            caption: z.string().optional(),       // 图片说明文字
+            date: z.date().optional(),            // 拍摄日期
+            location: z.string().optional(),      // 拍摄地点
+            subHtml: z.string().optional(),       // 自定义 HTML（优先级最高）
+            loading: z.enum(['lazy', 'eager']).optional(),
+            srcThumb: z.string().optional(),
+          })
+        )
+        .optional(),
     }),
 });
 
