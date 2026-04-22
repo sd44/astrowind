@@ -47,6 +47,23 @@ export const headerData = {
       text: '图片墙',
       href: getPermalink('/albums'),
     },
+    {
+      text: '调查问卷',
+      links: [
+        {
+          text: '集成指南',
+          href: getPermalink('/survey'),
+        },
+        {
+          text: '问卷示例',
+          href: getPermalink('/survey-examples'),
+        },
+        {
+          text: '问卷管理',
+          href: getPermalink('/survey-manage'),
+        },
+      ],
+    },
   ],
   actions: [{ text: 'Download', href: 'https://github.com/onwidget/astrowind', target: '_blank' }],
 };
