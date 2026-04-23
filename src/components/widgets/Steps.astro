@@ -22,12 +22,7 @@ const {
 } = Astro.props;
 ---
 
-<WidgetWrapper
-  id={id}
-  isDark={isDark}
-  containerClass={`max-w-5xl ${classes?.container ?? ''}`}
-  bg={bg}
->
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-5xl ${classes?.container ?? ''}`} bg={bg}>
   <div class:list={['flex flex-col gap-8 md:gap-12', { 'md:flex-row-reverse': isReversed }, { 'md:flex-row': image }]}>
     <div class:list={['md:self-center md:py-4', { 'md:basis-1/2': image }, { 'w-full': !image }]}>
       <Headline
@@ -40,24 +35,21 @@ const {
           ...((classes?.headline as object) ?? {}),
         }}
       />
-      <Timeline
-        items={items}
-        classes={classes?.items as StrRecord}
-      />
+      <Timeline items={items} classes={classes?.items as StrRecord} />
     </div>
     {
       image && (
-        <div class='relative md:basis-1/2'>
+        <div class="relative md:basis-1/2">
           {typeof image === 'string' ? (
             <Fragment set:html={image} />
           ) : (
             <Image
-              class='inset-0 w-full rounded-md bg-gray-400 object-cover object-top shadow-lg md:absolute md:h-full dark:bg-slate-700'
+              class="inset-0 w-full rounded-md bg-gray-400 object-cover object-top shadow-lg md:absolute md:h-full dark:bg-slate-700"
               widths={[400, 768]}
-              sizes='(max-width: 768px) 100vw, 432px'
+              sizes="(max-width: 768px) 100vw, 432px"
               width={432}
               height={768}
-              layout='cover'
+              layout="cover"
               src={image?.src}
               alt={image?.alt || ''}
             />

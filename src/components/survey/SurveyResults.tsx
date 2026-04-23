@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { availableSurveys, getSurveyResultsKey } from '../../data/survey-json';
 
 interface SurveyResult {
@@ -6,7 +6,7 @@ interface SurveyResult {
   timestamp: string;
   surveyId: string;
   surveyTitle: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export default function SurveyResults() {
@@ -17,16 +17,12 @@ export default function SurveyResults() {
   const [exportData, setExportData] = useState<string>('');
 
   // 加载所有问卷结果
-  useEffect(() => {
-    loadAllResults();
-  }, []);
-
-  const loadAllResults = () => {
+  const loadAllResults = useCallback(() => {
     setIsLoading(true);
     const allResults: Record<string, SurveyResult[]> = {};
-    
+
     // 加载所有问卷类型的结果
-    Object.keys(availableSurveys).forEach(surveyId => {
+    Object.keys(availableSurveys).forEach((surveyId) => {
       const resultsKey = getSurveyResultsKey(surveyId);
       try {
         const storedResults = localStorage.getItem(resultsKey);
@@ -37,7 +33,7 @@ export default function SurveyResults() {
         console.error(`加载问卷 ${surveyId} 结果失败:`, error);
       }
     });
-    
+
     // 加载默认问卷结果
     try {
       const defaultResults = localStorage.getItem(getSurveyResultsKey('default'));
@@ -47,26 +43,30 @@ export default function SurveyResults() {
     } catch (error) {
       console.error('加载默认问卷结果失败:', error);
     }
-    
+
     setResults(allResults);
     setIsLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    loadAllResults();
+  }, [loadAllResults]);
 
   // 删除单个结果
   const deleteResult = (surveyId: string, resultId: number) => {
     if (window.confirm('确定要删除这个问卷结果吗？')) {
       const surveyResults = results[surveyId] || [];
-      const updatedResults = surveyResults.filter(result => result.id !== resultId);
-      
+      const updatedResults = surveyResults.filter((result) => result.id !== resultId);
+
       const newResults = { ...results };
       if (updatedResults.length > 0) {
         newResults[surveyId] = updatedResults;
       } else {
         delete newResults[surveyId];
       }
-      
+
       setResults(newResults);
-      
+
       // 更新 localStorage
       localStorage.setItem(getSurveyResultsKey(surveyId), JSON.stringify(updatedResults));
     }
@@ -78,7 +78,7 @@ export default function SurveyResults() {
       const newResults = { ...results };
       delete newResults[surveyId];
       setResults(newResults);
-      
+
       // 清除 localStorage
       localStorage.removeItem(getSurveyResultsKey(surveyId));
     }
@@ -88,24 +88,27 @@ export default function SurveyResults() {
   const clearAllResults = () => {
     if (window.confirm('确定要清除所有问卷结果吗？此操作不可恢复。')) {
       // 清除所有问卷类型的 localStorage
-      Object.keys(availableSurveys).forEach(surveyId => {
+      Object.keys(availableSurveys).forEach((surveyId) => {
         localStorage.removeItem(getSurveyResultsKey(surveyId));
       });
       localStorage.removeItem(getSurveyResultsKey('default'));
-      
+
       setResults({});
     }
   };
 
   // 重新填写问卷（基于特定结果）
-  const restartWithResult = (surveyId: string, resultData: any) => {
+  const restartWithResult = (surveyId: string, resultData: SurveyResult) => {
     // 保存到临时存储，供问卷页面读取
-    localStorage.setItem('survey_restart_data', JSON.stringify({
-      surveyId,
-      data: resultData,
-      timestamp: new Date().toISOString()
-    }));
-    
+    localStorage.setItem(
+      'survey_restart_data',
+      JSON.stringify({
+        surveyId,
+        data: resultData,
+        timestamp: new Date().toISOString(),
+      })
+    );
+
     // 跳转到问卷页面
     window.location.href = `/survey?restart=${surveyId}`;
   };
@@ -125,35 +128,50 @@ export default function SurveyResults() {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
-  // 获取所有结果（按时间倒序）
-  const getAllResults = (): SurveyResult[] => {
+  // 获取所有结果（按时间倒序）- 使用 useMemo 缓存避免重复排序
+  const allResultsSorted = useMemo((): SurveyResult[] => {
     const all: SurveyResult[] = [];
-    Object.values(results).forEach(surveyResults => {
+    Object.values(results).forEach((surveyResults) => {
       all.push(...surveyResults);
     });
     return all.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-  };
+  }, [results]);
 
   // 获取筛选后的结果
-  const getFilteredResults = (): SurveyResult[] => {
+  const filteredResults = useMemo((): SurveyResult[] => {
     if (selectedSurvey === 'all') {
-      return getAllResults();
+      return allResultsSorted;
     }
     return results[selectedSurvey] || [];
-  };
+  }, [selectedSurvey, results, allResultsSorted]);
+
+  // 统计数据 - 使用 useMemo 缓存
+  const stats = useMemo(
+    () => ({
+      total: allResultsSorted.length,
+      bySurvey: Object.keys(results).reduce(
+        (acc, surveyId) => {
+          acc[surveyId] = (results[surveyId] ?? []).length;
+          return acc;
+        },
+        {} as Record<string, number>
+      ),
+    }),
+    [allResultsSorted.length, results]
+  );
 
   // 导出数据
   const handleExport = () => {
     const exportObj = {
       exportedAt: new Date().toISOString(),
-      totalResults: getAllResults().length,
-      resultsBySurvey: results
+      totalResults: allResultsSorted.length,
+      resultsBySurvey: results,
     };
-    
+
     setExportData(JSON.stringify(exportObj, null, 2));
     setShowExportModal(true);
   };
@@ -172,21 +190,10 @@ export default function SurveyResults() {
     setShowExportModal(false);
   };
 
-  // 统计数据
-  const stats = {
-    total: getAllResults().length,
-    bySurvey: Object.keys(results).reduce((acc, surveyId) => {
-      acc[surveyId] = results[surveyId].length;
-      return acc;
-    }, {} as Record<string, number>)
-  };
-
-  const filteredResults = getFilteredResults();
-
   if (isLoading) {
     return (
-      <div className="text-center py-8">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="py-8 text-center">
+        <div className="inline-block h-8 w-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
         <p className="mt-2 text-gray-600">加载问卷结果中...</p>
       </div>
     );
@@ -195,25 +202,25 @@ export default function SurveyResults() {
   return (
     <div className="survey-results space-y-8">
       {/* 统计信息和操作栏 */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div className="rounded-lg bg-white p-6 shadow-lg">
+        <div className="mb-6 flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">问卷结果</h2>
+            <h2 className="mb-2 text-2xl font-bold text-gray-800">问卷结果</h2>
             <p className="text-gray-600">
               共保存了 <span className="font-semibold text-blue-600">{stats.total}</span> 份问卷结果
             </p>
           </div>
-          
+
           <div className="flex flex-wrap gap-3">
             <button
               onClick={handleExport}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-medium"
+              className="rounded-md bg-green-600 px-4 py-2 font-medium text-white transition-colors hover:bg-green-700"
             >
               导出数据
             </button>
             <button
               onClick={clearAllResults}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors font-medium"
+              className="rounded-md bg-red-600 px-4 py-2 font-medium text-white transition-colors hover:bg-red-700"
             >
               清除所有
             </button>
@@ -222,30 +229,31 @@ export default function SurveyResults() {
 
         {/* 筛选器 */}
         <div className="mb-6">
-          <div className="flex items-center gap-4 mb-3">
-            <span className="text-gray-700 font-medium">筛选问卷类型：</span>
+          <div className="mb-3 flex items-center gap-4">
+            <span className="font-medium text-gray-700">筛选问卷类型：</span>
             <select
               value={selectedSurvey}
               onChange={(e) => setSelectedSurvey(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              aria-label="筛选问卷类型"
+              className="rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               <option value="all">所有问卷 ({stats.total})</option>
-              {Object.keys(results).map(surveyId => (
+              {Object.keys(results).map((surveyId) => (
                 <option key={surveyId} value={surveyId}>
-                  {getSurveyTitle(surveyId)} ({results[surveyId].length})
+                  {getSurveyTitle(surveyId)} ({(results[surveyId] ?? []).length})
                 </option>
               ))}
             </select>
           </div>
-          
+
           {/* 问卷类型统计 */}
           <div className="flex flex-wrap gap-3">
-            {Object.keys(results).map(surveyId => (
-              <div 
+            {Object.keys(results).map((surveyId) => (
+              <div
                 key={surveyId}
-                className={`px-3 py-1 rounded-full text-sm ${selectedSurvey === surveyId ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}`}
+                className={`rounded-full px-3 py-1 text-sm ${selectedSurvey === surveyId ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}`}
               >
-                {getSurveyTitle(surveyId)}: {results[surveyId].length}
+                {getSurveyTitle(surveyId)}: {(results[surveyId] ?? []).length}
               </div>
             ))}
           </div>
@@ -253,24 +261,29 @@ export default function SurveyResults() {
       </div>
 
       {/* 结果列表 */}
-      <div className="bg-white rounded-lg shadow-lg p-6">
+      <div className="rounded-lg bg-white p-6 shadow-lg">
         {filteredResults.length === 0 ? (
-          <div className="text-center py-12">
-            <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          <div className="py-12 text-center">
+            <svg className="mx-auto mb-4 h-16 w-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
             </svg>
-            <h3 className="text-lg font-semibold text-gray-700 mb-2">暂无问卷结果</h3>
-            <p className="text-gray-500 mb-6">您还没有完成任何调查问卷。</p>
-            <a 
-              href="/survey" 
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium inline-block"
+            <h3 className="mb-2 text-lg font-semibold text-gray-700">暂无问卷结果</h3>
+            <p className="mb-6 text-gray-500">您还没有完成任何调查问卷。</p>
+            <a
+              href="/survey"
+              className="inline-block rounded-md bg-blue-600 px-4 py-2 font-medium text-white transition-colors hover:bg-blue-700"
             >
               前往填写问卷
             </a>
           </div>
         ) : (
           <div className="space-y-6">
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-800">
                 共 {filteredResults.length} 个结果
                 {selectedSurvey !== 'all' && ` (${getSurveyTitle(selectedSurvey)})`}
@@ -278,60 +291,57 @@ export default function SurveyResults() {
               {selectedSurvey !== 'all' && (
                 <button
                   onClick={() => clearSurveyResults(selectedSurvey)}
-                  className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors text-sm"
+                  className="rounded-md bg-red-100 px-3 py-1 text-sm text-red-700 transition-colors hover:bg-red-200"
                 >
                   清除此类问卷
                 </button>
               )}
             </div>
-            
+
             <div className="space-y-4">
               {filteredResults.map((result) => (
-                <div key={result.id} className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-3">
+                <div
+                  key={result.id}
+                  className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-300"
+                >
+                  <div className="mb-3 flex flex-col justify-between gap-4 md:flex-row md:items-center">
                     <div>
-                      <div className="flex items-center gap-2 mb-1">
+                      <div className="mb-1 flex items-center gap-2">
                         <span className="font-medium text-gray-800">{result.surveyTitle}</span>
-                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
-                          {result.surveyId}
-                        </span>
+                        <span className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">{result.surveyId}</span>
                       </div>
-                      <div className="text-sm text-gray-500">
-                        {formatTime(result.timestamp)}
-                      </div>
+                      <div className="text-sm text-gray-500">{formatTime(result.timestamp)}</div>
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => restartWithResult(result.surveyId, result)}
-                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors text-sm"
+                        className="rounded-md bg-blue-100 px-3 py-1 text-sm text-blue-700 transition-colors hover:bg-blue-200"
                       >
                         重新填写（基于此结果）
                       </button>
                       <a
                         href="/survey"
-                        className="px-3 py-1 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-colors text-sm inline-block"
+                        className="inline-block rounded-md bg-green-100 px-3 py-1 text-sm text-green-700 transition-colors hover:bg-green-200"
                       >
                         重新填写（全新）
                       </a>
                       <button
                         onClick={() => deleteResult(result.surveyId, result.id)}
-                        className="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors text-sm"
+                        className="rounded-md bg-red-100 px-3 py-1 text-sm text-red-700 transition-colors hover:bg-red-200"
                       >
                         删除
                       </button>
                     </div>
                   </div>
-                  
-                  <div className="mt-3 pt-3 border-t border-gray-100">
+
+                  <div className="mt-3 border-t border-gray-100 pt-3">
                     <details>
                       <summary className="cursor-pointer text-sm text-gray-600 hover:text-gray-800">
                         查看详细回答
                       </summary>
-                      <div className="mt-2 bg-gray-50 rounded p-3 max-h-60 overflow-auto">
-                        <pre className="text-xs text-gray-700">
-                          {JSON.stringify(result, null, 2)}
-                        </pre>
+                      <div className="mt-2 max-h-60 overflow-auto rounded bg-gray-50 p-3">
+                        <pre className="text-xs text-gray-700">{JSON.stringify(result, null, 2)}</pre>
                       </div>
                     </details>
                   </div>
@@ -344,43 +354,40 @@ export default function SurveyResults() {
 
       {/* 导出模态框 */}
       {showExportModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] flex flex-col">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex justify-between items-center">
+        <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black p-4">
+          <div className="flex max-h-[80vh] w-full max-w-2xl flex-col rounded-lg bg-white shadow-xl">
+            <div className="border-b border-gray-200 p-6">
+              <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-800">导出问卷数据</h3>
                 <button
                   onClick={() => setShowExportModal(false)}
+                  aria-label="关闭"
                   className="text-gray-400 hover:text-gray-600"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              <p className="text-gray-600 text-sm mt-2">
-                导出所有问卷结果为 JSON 格式，可用于备份或分析。
-              </p>
+              <p className="mt-2 text-sm text-gray-600">导出所有问卷结果为 JSON 格式，可用于备份或分析。</p>
             </div>
-            
-            <div className="p-6 flex-grow overflow-auto">
-              <div className="bg-gray-800 rounded p-4">
-                <pre className="text-green-400 text-sm overflow-auto">
-                  {exportData}
-                </pre>
+
+            <div className="flex-grow overflow-auto p-6">
+              <div className="rounded bg-gray-800 p-4">
+                <pre className="overflow-auto text-sm text-green-400">{exportData}</pre>
               </div>
             </div>
-            
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
+
+            <div className="flex justify-end gap-3 border-t border-gray-200 p-6">
               <button
                 onClick={() => setShowExportModal(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+                className="rounded-md bg-gray-200 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-300"
               >
                 取消
               </button>
               <button
                 onClick={downloadExport}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
               >
                 下载 JSON 文件
               </button>

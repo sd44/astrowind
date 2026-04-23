@@ -17,7 +17,7 @@ export const customerSatisfactionSurvey = {
           rateMin: 1,
           rateMax: 5,
           minRateDescription: '非常不满意',
-          maxRateDescription: '非常满意'
+          maxRateDescription: '非常满意',
         },
         {
           type: 'rating',
@@ -27,7 +27,7 @@ export const customerSatisfactionSurvey = {
           rateMin: 1,
           rateMax: 5,
           minRateDescription: '很差',
-          maxRateDescription: '很好'
+          maxRateDescription: '很好',
         },
         {
           type: 'rating',
@@ -37,9 +37,9 @@ export const customerSatisfactionSurvey = {
           rateMin: 1,
           rateMax: 5,
           minRateDescription: '很差',
-          maxRateDescription: '很好'
-        }
-      ]
+          maxRateDescription: '很好',
+        },
+      ],
     },
     {
       name: 'page2',
@@ -54,16 +54,16 @@ export const customerSatisfactionSurvey = {
             { value: 'probably', text: '可能会' },
             { value: 'unsure', text: '不确定' },
             { value: 'probablyNot', text: '可能不会' },
-            { value: 'definitelyNot', text: '一定不会' }
-          ]
+            { value: 'definitelyNot', text: '一定不会' },
+          ],
         },
         {
           type: 'comment',
           name: 'suggestions',
           title: '您有什么建议或意见可以帮助我们改进？',
-          rows: 4
-        }
-      ]
+          rows: 4,
+        },
+      ],
     },
     {
       name: 'page3',
@@ -72,7 +72,7 @@ export const customerSatisfactionSurvey = {
           type: 'text',
           name: 'name',
           title: '您的姓名（可选）',
-          placeholder: '请输入您的姓名'
+          placeholder: '请输入您的姓名',
         },
         {
           type: 'text',
@@ -82,9 +82,9 @@ export const customerSatisfactionSurvey = {
           placeholder: 'example@email.com',
           validators: [
             {
-              type: 'email'
-            }
-          ]
+              type: 'email',
+            },
+          ],
         },
         {
           type: 'boolean',
@@ -92,10 +92,10 @@ export const customerSatisfactionSurvey = {
           title: '是否允许我们通过邮箱与您联系？',
           labelTrue: '是',
           labelFalse: '否',
-          defaultValue: false
-        }
-      ]
-    }
+          defaultValue: false,
+        },
+      ],
+    },
   ],
   showProgressBar: 'bottom',
   progressBarType: 'questions',
@@ -104,7 +104,8 @@ export const customerSatisfactionSurvey = {
   pagePrevText: '上一页',
   pageNextText: '下一页',
   completeText: '提交',
-  completedHtml: '<h3 class="text-2xl font-bold text-green-600 mb-4">感谢您参与调查！</h3><p class="text-gray-700">您的反馈对我们非常重要，将帮助我们提供更好的服务。</p>'
+  completedHtml:
+    '<h3 class="text-2xl font-bold text-green-600 mb-4">感谢您参与调查！</h3><p class="text-gray-700">您的反馈对我们非常重要，将帮助我们提供更好的服务。</p>',
 };
 
 export const productFeedbackSurvey = {
@@ -122,7 +123,7 @@ export const productFeedbackSurvey = {
           rateMin: 1,
           rateMax: 5,
           minRateDescription: '非常难用',
-          maxRateDescription: '非常易用'
+          maxRateDescription: '非常易用',
         },
         {
           type: 'rating',
@@ -132,7 +133,7 @@ export const productFeedbackSurvey = {
           rateMin: 1,
           rateMax: 5,
           minRateDescription: '不美观',
-          maxRateDescription: '非常美观'
+          maxRateDescription: '非常美观',
         },
         {
           type: 'rating',
@@ -142,13 +143,13 @@ export const productFeedbackSurvey = {
           rateMin: 1,
           rateMax: 5,
           minRateDescription: '很差',
-          maxRateDescription: '很好'
+          maxRateDescription: '很好',
         },
         {
           type: 'comment',
           name: 'improvements',
           title: '您希望产品增加哪些功能或改进？',
-          rows: 4
+          rows: 4,
         },
         {
           type: 'checkbox',
@@ -160,13 +161,14 @@ export const productFeedbackSurvey = {
             { value: 'features', text: '功能丰富' },
             { value: 'stability', text: '稳定性' },
             { value: 'support', text: '技术支持' },
-            { value: 'price', text: '价格合理' }
-          ]
-        }
-      ]
-    }
+            { value: 'price', text: '价格合理' },
+          ],
+        },
+      ],
+    },
   ],
-  completedHtml: '<h3 class="text-2xl font-bold text-green-600 mb-4">感谢您的宝贵反馈！</h3><p class="text-gray-700">您的意见将帮助我们打造更好的产品。</p>'
+  completedHtml:
+    '<h3 class="text-2xl font-bold text-green-600 mb-4">感谢您的宝贵反馈！</h3><p class="text-gray-700">您的意见将帮助我们打造更好的产品。</p>',
 };
 
 export const employeeFeedbackSurvey = {
@@ -182,7 +184,7 @@ export const employeeFeedbackSurvey = {
           title: '您对当前工作的满意度如何？',
           isRequired: true,
           rateMin: 1,
-          rateMax: 5
+          rateMax: 5,
         },
         {
           type: 'rating',
@@ -190,7 +192,7 @@ export const employeeFeedbackSurvey = {
           title: '团队协作氛围如何？',
           isRequired: true,
           rateMin: 1,
-          rateMax: 5
+          rateMax: 5,
         },
         {
           type: 'rating',
@@ -198,18 +200,19 @@ export const employeeFeedbackSurvey = {
           title: '管理层支持度如何？',
           isRequired: true,
           rateMin: 1,
-          rateMax: 5
+          rateMax: 5,
         },
         {
           type: 'comment',
           name: 'suggestions',
           title: '您对公司有什么建议？',
-          rows: 4
-        }
-      ]
-    }
+          rows: 4,
+        },
+      ],
+    },
   ],
-  completedHtml: '<h3 class="text-2xl font-bold text-blue-600 mb-4">感谢您的反馈！</h3><p class="text-gray-700">您的意见将帮助我们创造更好的工作环境。</p>'
+  completedHtml:
+    '<h3 class="text-2xl font-bold text-blue-600 mb-4">感谢您的反馈！</h3><p class="text-gray-700">您的意见将帮助我们创造更好的工作环境。</p>',
 };
 
 // 默认使用的调查问卷
@@ -219,7 +222,7 @@ export const defaultSurvey = customerSatisfactionSurvey;
 export const availableSurveys = {
   customerSatisfaction: customerSatisfactionSurvey,
   productFeedback: productFeedbackSurvey,
-  employeeFeedback: employeeFeedbackSurvey
+  employeeFeedback: employeeFeedbackSurvey,
 };
 
 // 获取调查问卷的本地存储键名
