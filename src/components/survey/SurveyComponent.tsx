@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Model } from 'survey-core';
 import { Survey } from 'survey-react-ui';
-import 'survey-react/defaultV2.css';
+import "survey-core/survey-core.css";
+import { SharpLight } from "survey-core/themes";
 import { defaultSurvey, getSurveyStorageKey, getSurveyResultsKey } from '../../data/survey-json';
 
 interface SurveyComponentProps {
@@ -77,6 +78,7 @@ export default function SurveyComponent({
   // 初始化调查问卷
   useEffect(() => {
     const model = new Model(json);
+    model.applyTheme(SharpLight)
     
     // 设置自定义样式
     model.css = {
